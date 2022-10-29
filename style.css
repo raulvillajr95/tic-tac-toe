@@ -2,7 +2,31 @@
 }
 
 /* Desktop Body */
+.container {
+  height: 10rem;
+  width: 10rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  column-gap: 3px;
+  row-gap: 3px;
+  margin: 0 auto;
 
+  background-color: black;
+}
+.container > * {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+}
+.buttons {
+  height: fit-content;
+  width: 5rem;
+  margin: 2rem auto 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
 
 /* Tablet */
 @media only screen and (max-width: 70em) {

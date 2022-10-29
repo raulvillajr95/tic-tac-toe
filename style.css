@@ -1,0 +1,24 @@
+:root {
+}
+
+/* Desktop Body */
+
+
+/* Tablet */
+@media only screen and (max-width: 70em) {
+  /* Tablet Body */
+}
+
+/* Mobile */
+@media only screen and (max-width: 38em) {
+  /* Mobile Body */
+}
+
+/* Super small phones */
+@media only screen and (max-width: 22em) {
+  /* Small Body */
+}
+
+@media (prefers-color-scheme: dark) {
+  /* Desktop Body */
+}

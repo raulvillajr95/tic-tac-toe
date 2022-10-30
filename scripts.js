@@ -1,11 +1,13 @@
 let  gameBoard = (() => {
   // might delete this soon
-  let board = () => ["X","O","X","X","O","O","X","X","O"];
+  let board = ["","","","","","","","",""];
 
   let markerChoiceState = "";
+  let turnsCount = 0;
   return {
     board,
     markerChoiceState,
+    turnsCount
   }
 })();
 
@@ -22,16 +24,45 @@ let Player = () => {
 //   }
 // })();
 
+let correct = (() => {
+
+  let result = (board,marker) => 
+    board[0] === `${marker}` && board[4] === `${marker}` ||
+    board[1] === `${marker}` && board[3] === `${marker}`;
+
+  return {result}
+})();
+
+/*
+Winning places for 4x4
+-["X","X","","",""]
+-["","","","X","X"]
+-["X","","","X",""]
+-["","X","","","X"]
+-["X","","","","X"]
+-["","X","","X",""]
+*/
+
 // If clicked add an x
 (function() {
   let container = document.querySelector(".container");
 
   for (let i = 0; i < container.children.length; i++) {
     container.children[i].addEventListener('click', (e) => {
-      console.log(`box${i+1} clicked!`)
 
       if (container.children[i].textContent === "") {
         container.children[i].textContent = gameBoard.markerChoiceState
+        gameBoard.board[i] = gameBoard.markerChoiceState
+
+        gameBoard.turnsCount++;
+
+        // working on single character match
+        if (correct.result(gameBoard.board, gameBoard.markerChoiceState) && container.children[i].textContent != "") {
+
+          console.log(`${gameBoard.markerChoiceState}'s won!`)
+        } else if (gameBoard.turnsCount === 9) {
+          console.log("Tie")
+        }
       }
 
       gameBoard.markerChoiceState = ""
@@ -54,6 +85,21 @@ let Player = () => {
 })();
 
 /*
+Winning places on board:
+-["X","X","X","","","","","",""]
+-["","","","X","X","X","","",""]
+-["","","","","","","X","X","X"]
+-["X","","","X","","","X","",""]
+-["","X","","","X","","","X",""]
+-["","","X","","","X","","","X"]
+-["X","","","","X","","","","X"]
+-["","","X","","X","","X","",""]
+-also for Os ⬆️
+-the empty stops can be anything
+
+*/
+
+/*
 ideas:
 -I may be able to combine the 3 anonymous functions
 -possibly add if else statement to for X's and O'x
@@ -62,12 +108,7 @@ ideas:
 1. Done
 2. Done
 3. Done
-4. Build functions that allow players to add marks
-    if clicked add an X
-    add 2 buttons, X and O
-      tap one(X or O) 
-        then save it to put on square
-        once tapped reset for a new tap
+4. Done
 5. Logic for game over
     3 in a row
     tie

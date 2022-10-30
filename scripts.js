@@ -1,12 +1,14 @@
 let  gameBoard = (() => {
   let board = ["","","","","","","","",""];
 
-  let markerChoiceState = "";
+  let markerChoiceState = "X";
   let turnsCount = 0;
+  let tableEnabled = false;
   return {
     board,
     markerChoiceState,
-    turnsCount
+    turnsCount,
+    tableEnabled
   }
 })();
 
@@ -33,11 +35,14 @@ let correct = (() => {
 // If clicked add an x and displays board
 (function() {
   let container = document.querySelector(".container");
+  let warningElem = document.querySelector(".warning")
+  let player1 = document.getElementById("player1")
+  let player2 = document.getElementById("player2")
 
   for (let i = 0; i < container.children.length; i++) {
     container.children[i].addEventListener('click', (e) => {
 
-      if (container.children[i].textContent === "") {
+      if (container.children[i].textContent === "" && gameBoard.tableEnabled) {
         container.children[i].textContent = gameBoard.markerChoiceState
         gameBoard.board[i] = gameBoard.markerChoiceState
 
@@ -46,13 +51,22 @@ let correct = (() => {
         // working on single character match
         if (correct.result(gameBoard.board, gameBoard.markerChoiceState) && container.children[i].textContent != "") {
 
-          console.log(`${gameBoard.markerChoiceState}'s won!`)
+          if (gameBoard.markerChoiceState === "X") {
+            warningElem.textContent = `${player1.value} wins!`
+          } else if (gameBoard.markerChoiceState === "O") {
+            warningElem.textContent = `${player2.value} wins!`
+          }
         } else if (gameBoard.turnsCount === 9) {
-          console.log("Tie")
+          
+          warningElem.textContent = "TIE"
+        }
+
+        if (gameBoard.markerChoiceState === "X") {
+          gameBoard.markerChoiceState = "O"
+        } else if (gameBoard.markerChoiceState === "O") {
+          gameBoard.markerChoiceState = "X"
         }
       }
-
-      gameBoard.markerChoiceState = ""
     });
   }
 })();
@@ -71,11 +85,72 @@ let correct = (() => {
   })
 })();
 
+// Start menu
+(function() {
+  let player1 = document.getElementById("player1")
+  let player1Display = document.getElementById("player1-display")
+  let player2 = document.getElementById("player2")
+  let player2Display = document.getElementById("player2-display")
+  let startBtn = document.querySelector(".start-btn")
+  let container = document.querySelector(".container");
+  let warningElem = document.querySelector(".warning")
+
+  let startBtnToggle = true
+
+  startBtn.addEventListener('click', (e) => {
+    if (player1.value === "" || player2.value === "") {
+      warningElem.textContent = "Please enter player names/name"
+    } else {
+      if (startBtnToggle) {
+        gameBoard.tableEnabled = true;
+
+        warningElem.textContent = ""
+  
+        player1.style.display = "none";
+        player2.style.display = "none";
+  
+        player1Display.textContent = player1.value
+        player2Display.textContent = player2.value
+  
+        startBtn.textContent = "Restart"
+        startBtnToggle = false;
+      } else if (!startBtnToggle) {
+        gameBoard.tableEnabled = false;
+        gameBoard.board = ["","","","","","","","",""];
+        gameBoard.markerChoiceState = "X";
+        gameBoard.turnsCount = 0;
+
+        warningElem.textContent = "Enter Player names"
+  
+        // Reset Xs and Os on table
+        for (let i = 0; i < container.children.length; i++) {
+          container.children[i].textContent = ""; 
+        }
+  
+        player1.style.display = "";
+        player2.style.display = "";
+  
+        player1Display.textContent = ""
+        player2Display.textContent = ""
+  
+        player1.value = ""
+        player2.value = ""
+  
+        startBtn.textContent = "Start"
+        startBtnToggle = true;
+      }
+    }
+  })
+
+})();
+
 /*
 ideas:
--I may be able to combine the 3 anonymous functions
--possibly add if else statement to for X's and O'x
- when adding event listeners to grid
+-start with just 'start' button
+  and player1/player 2 form for names
+ then make X & O buttons appear
+ at the end(tie or win), display result
+  and have the 'restart' button
 
 1. Done
 2. Done

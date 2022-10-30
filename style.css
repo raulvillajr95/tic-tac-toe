@@ -2,6 +2,15 @@
 }
 
 /* Desktop Body */
+.body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 10rem 2rem;
+}
+.start-menu {
+  grid-column: 1/2;
+  grid-row: 1/2;
+}
 .container {
   height: 10rem;
   width: 10rem;
@@ -11,7 +20,8 @@
   column-gap: 3px;
   row-gap: 3px;
   margin: 0 auto;
-
+  grid-column: 2/-1;
+  grid-row: 1/2;
   background-color: black;
 }
 .container > * {
@@ -23,9 +33,18 @@
 .buttons {
   height: fit-content;
   width: 5rem;
-  margin: 2rem auto 0 auto;
+  margin: 0 auto 0 auto;
   display: flex;
   justify-content: space-between;
+  grid-column: 2/3;
+  grid-row: 2/3;
+  align-self: center;
+  justify-self: center;
+}
+
+/* Might delete buttons permanently */
+.buttons {
+  display: none;
 }
 
 /* Tablet */

@@ -1,5 +1,4 @@
 let  gameBoard = (() => {
-  // might delete this soon
   let board = ["","","","","","","","",""];
 
   let markerChoiceState = "";
@@ -15,35 +14,23 @@ let Player = () => {
   return {}
 }
 
-// Displays board to .container
-// (function() {
-//   let container = document.querySelector(".container");
-
-//   for (let i = 0; i < container.children.length; i++) {
-//     container.children[i].textContent = gameBoard.board()[i];
-//   }
-// })();
-
+// Wining/Losing logic
 let correct = (() => {
 
   let result = (board,marker) => 
-    board[0] === `${marker}` && board[4] === `${marker}` ||
-    board[1] === `${marker}` && board[3] === `${marker}`;
+    board[0] === `${marker}` && board[1] === `${marker}` && board[2] === `${marker}` ||
+    board[3] === `${marker}` && board[4] === `${marker}` && board[5] === `${marker}` ||
+    board[6] === `${marker}` && board[7] === `${marker}` && board[8] === `${marker}` ||
+    board[0] === `${marker}` && board[3] === `${marker}` && board[6] === `${marker}` ||
+    board[1] === `${marker}` && board[4] === `${marker}` && board[7] === `${marker}` ||
+    board[2] === `${marker}` && board[5] === `${marker}` && board[8] === `${marker}` ||
+    board[0] === `${marker}` && board[4] === `${marker}` && board[8] === `${marker}` ||
+    board[2] === `${marker}` && board[4] === `${marker}` && board[6] === `${marker}`;
 
   return {result}
 })();
 
-/*
-Winning places for 4x4
--["X","X","","",""]
--["","","","X","X"]
--["X","","","X",""]
--["","X","","","X"]
--["X","","","","X"]
--["","X","","X",""]
-*/
-
-// If clicked add an x
+// If clicked add an x and displays board
 (function() {
   let container = document.querySelector(".container");
 
@@ -85,21 +72,6 @@ Winning places for 4x4
 })();
 
 /*
-Winning places on board:
--["X","X","X","","","","","",""]
--["","","","X","X","X","","",""]
--["","","","","","","X","X","X"]
--["X","","","X","","","X","",""]
--["","X","","","X","","","X",""]
--["","","X","","","X","","","X"]
--["X","","","","X","","","","X"]
--["","","X","","X","","X","",""]
--also for Os ⬆️
--the empty stops can be anything
-
-*/
-
-/*
 ideas:
 -I may be able to combine the 3 anonymous functions
 -possibly add if else statement to for X's and O'x
@@ -109,9 +81,7 @@ ideas:
 2. Done
 3. Done
 4. Done
-5. Logic for game over
-    3 in a row
-    tie
+5. Done
 6. Clean up interface
     allow to put names each player
     start/reset game button

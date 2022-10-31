@@ -5,12 +5,14 @@ let gameBoard = (() => {
   let turnsCount = 0;
   let tableEnabled = false;
   let mode = "";
+  let startBtnToggle = true;
   return {
     board,
     markerChoiceState,
     turnsCount,
     tableEnabled,
-    mode
+    mode,
+    startBtnToggle
   }
 })();
 
@@ -96,14 +98,16 @@ let correct = (() => {
   let startBtn = document.querySelector(".start-btn")
   let container = document.querySelector(".container");
   let warningElem = document.querySelector(".warning")
+  let cpuBtn = document.querySelector(".cpu-btn")
 
+  // delete
   let startBtnToggle = true
 
   startBtn.addEventListener('click', (e) => {
     if (player1.value === "" || player2.value === "") {
       warningElem.textContent = "Please enter player names/name"
     } else {
-      if (startBtnToggle) {
+      if (gameBoard.startBtnToggle) {
         gameBoard.tableEnabled = true;
         gameBoard.mode = "player"
 
@@ -111,18 +115,19 @@ let correct = (() => {
   
         player1.style.display = "none";
         player2.style.display = "none";
+        cpuBtn.style.display = "none";
   
         player1Display.textContent = player1.value
         player2Display.textContent = player2.value
   
         startBtn.textContent = "Restart"
-        startBtnToggle = false;
-      } else if (!startBtnToggle) {
+        gameBoard.startBtnToggle = false;
+      } else if (!gameBoard.startBtnToggle) {
         gameBoard.tableEnabled = false;
         gameBoard.board = ["","","","","","","","",""];
         gameBoard.markerChoiceState = "X";
         gameBoard.turnsCount = 0;
-        gameBoard.mode = ""
+        gameBoard.mode = "";
 
         warningElem.textContent = "Enter Player names or play CPU"
   
@@ -139,9 +144,10 @@ let correct = (() => {
   
         player1.value = ""
         player2.value = ""
+        cpuBtn.style.display = "";
   
         startBtn.textContent = "Start"
-        startBtnToggle = true;
+        gameBoard.startBtnToggle = true;
       }
     }
   })
@@ -151,7 +157,6 @@ let correct = (() => {
 // CPU Start Menu
 (function () {
   let cpuBtn = document.querySelector(".cpu-btn")
-
   let player1 = document.getElementById("player1")
   let player1Display = document.getElementById("player1-display")
   let player2 = document.getElementById("player2")
@@ -160,14 +165,11 @@ let correct = (() => {
   let container = document.querySelector(".container");
   let warningElem = document.querySelector(".warning")
 
-  // change to cpuBtnToggle
-  let startBtnToggle = true
-
   cpuBtn.addEventListener('click', (e) => {
     if (player1.value === "") {
       warningElem.textContent = "Please enter player 1 name"
     } else {
-      if (startBtnToggle) {
+      if (gameBoard.startBtnToggle) {
         gameBoard.tableEnabled = true;
         gameBoard.mode = "cpu"
 
@@ -177,6 +179,8 @@ let correct = (() => {
   
         player1.style.display = "none";
         player2.style.display = "none";
+        cpuBtn.style.display = "none";
+
   
         player1Display.textContent = player1.value
 
@@ -184,8 +188,8 @@ let correct = (() => {
         player2Display.textContent = player2.value
   
         startBtn.textContent = "Restart"
-        startBtnToggle = false;
-      } else if (!startBtnToggle) {
+        gameBoard.startBtnToggle = false;
+      } else if (!gameBoard.startBtnToggle) {
         gameBoard.tableEnabled = false;
         gameBoard.board = ["","","","","","","","",""];
         gameBoard.markerChoiceState = "X";
@@ -201,6 +205,7 @@ let correct = (() => {
   
         player1.style.display = "";
         player2.style.display = "";
+        cpuBtn.style.display = "";
   
         player1Display.textContent = ""
         player2Display.textContent = ""
@@ -209,7 +214,7 @@ let correct = (() => {
         player2.value = ""
   
         startBtn.textContent = "Start"
-        startBtnToggle = true;
+        gameBoard.startBtnToggle = true;
       }
     }
   })
@@ -219,10 +224,10 @@ let correct = (() => {
 let cpuMatch = (() => {
   let run = () => {
     let container = document.querySelector(".container");
+    let warningElem = document.querySelector(".warning")
 
     if (gameBoard.mode = "cpu") {
       for (let i = 0; i < container.children.length; i++) {
-        console.log("CPU")
 
         container.children[i].addEventListener('click', (e) => {
     
@@ -230,32 +235,21 @@ let cpuMatch = (() => {
           if (container.children[i].textContent === "" && gameBoard.tableEnabled && gameBoard.mode === "cpu") {
             container.children[i].textContent = gameBoard.markerChoiceState
             gameBoard.board[i] = gameBoard.markerChoiceState
-
-            console.log("X's logic")
     
             gameBoard.turnsCount++;
     
             // checking results
             if (correct.result(gameBoard.board, gameBoard.markerChoiceState) && container.children[i].textContent != "") {
-              console.log("o wins")
+              warningElem.textContent = "X wins";
             } else if (gameBoard.turnsCount === 9) {
-    
-              console.log("TIE")
+              warningElem.textContent = "TIE";
             }
           }
 
           /////// CPU O's logic
           let choice = (() => Math.floor(Math.random() * 9))();
-          console.log(choice)
-          console.log(choice)
-          // choice = Math.floor(Math.random() * 9);
-          console.log(choice)
-          console.log(choice)
-
           if (gameBoard.tableEnabled && gameBoard.mode === "cpu") {
             while (true) {
-  
-              console.log(choice)
   
               choice = Math.floor(Math.random() * 9);
   
@@ -294,11 +288,12 @@ let cpuMatch = (() => {
 
 /*
 ideas:
--after my X, place a random O
-  randomly in any of the boxes left
-    i could do a while loop
-      while place filled, new choice and
-      run again pick another random spot
+-change startBtnToggle on start menu & cpu start menu
+ to direct to gameBoard.startBtnToggle
+-when i press cpu, why does 'Restart' have
+ to be pressed twice to restart??
+  open window wide
+    open 2 scripts.js windows to see wassup
 
 1. Done
 2. Done
@@ -314,5 +309,10 @@ ideas:
 later:
 -make it look real clean with css
 -when playing CPU randomly choose who goes first
+  after pressing start, 
+    randomly 50/50 chance
+    display "CPU first"
+    then let cpu go automatically
+-refactor code
 
 */

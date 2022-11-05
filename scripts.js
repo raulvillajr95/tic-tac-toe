@@ -6,13 +6,17 @@ let gameBoard = (() => {
   let tableEnabled = false;
   let mode = "";
   let startBtnToggle = true;
+  let scores = [3, 2, 3, 2, 4, 2, 3, 2, 3];
+  let indexOfMissing = 0;
   return {
     board,
     markerChoiceState,
     turnsCount,
     tableEnabled,
     mode,
-    startBtnToggle
+    startBtnToggle,
+    scores,
+    indexOfMissing
   }
 })();
 
@@ -20,7 +24,7 @@ let Player = () => {
   return {}
 }
 
-// Wining/Losing logic
+// Winning/Losing logic
 let correct = (() => {
 
   let result = (board,marker) => 
@@ -52,8 +56,8 @@ let correct = (() => {
 
         gameBoard.turnsCount++;
 
-        // working on single character match
         if (correct.result(gameBoard.board, gameBoard.markerChoiceState) && container.children[i].textContent != "") {
+          gameBoard.tableEnabled = false
 
           if (gameBoard.markerChoiceState === "X") {
             warningElem.textContent = `${player1.value} wins!`
@@ -99,9 +103,6 @@ let correct = (() => {
   let container = document.querySelector(".container");
   let warningElem = document.querySelector(".warning")
   let cpuBtn = document.querySelector(".cpu-btn")
-
-  // delete
-  let startBtnToggle = true
 
   startBtn.addEventListener('click', (e) => {
     if (player1.value === "" || player2.value === "") {
@@ -220,6 +221,49 @@ let correct = (() => {
   })
 })();
 
+let closeStates = (() => {
+  let rowsColsDia = [{index0: gameBoard.board[0],index1: gameBoard.board[1],index2: gameBoard.board[2]},
+  {index3: gameBoard.board[3],index4: gameBoard.board[4],index5: gameBoard.board[5]},
+  {index6: gameBoard.board[6],index7: gameBoard.board[7],index8: gameBoard.board[8]},
+  {index0: gameBoard.board[0],index3: gameBoard.board[3],index6: gameBoard.board[6]},
+  {index1: gameBoard.board[1],index4: gameBoard.board[4],index7: gameBoard.board[7]},
+  {index2: gameBoard.board[2],index5: gameBoard.board[5],index8: gameBoard.board[8]},
+  {index0: gameBoard.board[0],index4: gameBoard.board[4],index8: gameBoard.board[8]},
+  {index2: gameBoard.board[2],index4: gameBoard.board[4],index6: gameBoard.board[6]}]
+
+  let closeLetter = "";
+  let findState = () => {
+    let hasTwoSameMarkers = false;
+
+    for (let i = 0; i < rowsColsDia.length; i++) {
+      if(Object.values(rowsColsDia[i]).join('') === "XX" || Object.values(rowsColsDia[i]).join('') === "OO") {
+        hasTwoSameMarkers = true;
+
+        for (let j = 0; j < 3; j++) {
+          if (rowsColsDia[i][Object.keys(rowsColsDia[i])[j]] == "") {
+            gameBoard.indexOfMissing = Number(Object.keys(rowsColsDia[i])[j].slice(-1));
+            if (Object.values(rowsColsDia[i])[0] == "X" || Object.values(rowsColsDia[i])[0] == "X") {
+              closeLetter = "X"
+            } else if (Object.values(rowsColsDia[i])[0] == "O" || Object.values(rowsColsDia[i])[0] == "O") {
+              closeLetter = "O"
+            }
+            break;
+          }
+        }
+      }
+    }
+
+    return hasTwoSameMarkers
+  }
+
+
+  return {
+    findState,
+    closeLetter
+  }
+});
+closeStates().findState()
+
 // CPU Match logic
 let cpuMatch = (() => {
   let run = () => {
@@ -235,48 +279,27 @@ let cpuMatch = (() => {
           if (container.children[i].textContent === "" && gameBoard.tableEnabled && gameBoard.mode === "cpu") {
             container.children[i].textContent = gameBoard.markerChoiceState
             gameBoard.board[i] = gameBoard.markerChoiceState
+            gameBoard.scores[i] = null
+
+            if (closeStates().findState()) {
+              gameBoard.scores[gameBoard.indexOfMissing] += 10
+            }
     
             gameBoard.turnsCount++;
+            gameBoard.markerChoiceState = "O";
     
             // checking results
             if (correct.result(gameBoard.board, gameBoard.markerChoiceState) && container.children[i].textContent != "") {
               warningElem.textContent = "X wins";
+              gameBoard.tableEnabled = false
             } else if (gameBoard.turnsCount === 9) {
               warningElem.textContent = "TIE";
+              gameBoard.tableEnabled = false
             }
           }
 
-          /////// CPU O's logic
-          let choice = (() => Math.floor(Math.random() * 9))();
-          if (gameBoard.tableEnabled && gameBoard.mode === "cpu") {
-            while (true) {
-  
-              choice = Math.floor(Math.random() * 9);
-  
-              if (container.children[choice].textContent == "") {
-                container.children[choice].textContent = "O"
-                gameBoard.board[choice] = "O"
-
-                gameBoard.turnsCount++;
-
-                // checking results
-                if (correct.result(gameBoard.board, "O") && container.children[choice].textContent != "") {
-                  console.log("O wins")
-                } else if (gameBoard.turnsCount === 9) {
-        
-                  console.log("TIE")
-                }
-  
-                break;
-
-              } else if (container.children[choice].textContent !== "") {
-                if (gameBoard.turnsCount == 9) {
-                  break;
-                }
-                choice = Math.floor(Math.random() * 9);
-              }
-            }
-          }
+          // CPU O's logic
+          setTimeout(() => {cpuTurn.run()}, 350)
         });
       }
     }
@@ -286,14 +309,81 @@ let cpuMatch = (() => {
   }
 })();
 
+let cpuTurn = (() => {
+  let run = () => {
+    function highest(arr) {
+      let count = 0;
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] > count) {
+          count = arr[i]
+        }
+      }
+      return count;
+    }
+
+    let container = document.querySelector(".container");
+    let warningElem = document.querySelector(".warning");
+
+    if (gameBoard.tableEnabled && gameBoard.mode === "cpu") {
+  
+      let high = highest(gameBoard.scores)
+      let index = gameBoard.scores.indexOf(high);
+
+      if (container.children[index].textContent == "" && gameBoard.markerChoiceState == "O") {
+
+        if (gameBoard.turnsCount == 3 &&
+          ((gameBoard.board[0] == 'X' && gameBoard.board[8]) ||
+          (gameBoard.board[2] == 'X' && gameBoard.board[6]))) {
+            
+          container.children[1].textContent = "O"
+          gameBoard.board[1] = "O"
+          gameBoard.scores[1] = null
+          
+        } else {
+          container.children[index].textContent = "O"
+          gameBoard.board[index] = "O"
+          gameBoard.scores[index] = null
+          
+        }
+
+        if (closeStates().findState()) {
+          gameBoard.scores[gameBoard.indexOfMissing] += 10
+        }
+
+        gameBoard.turnsCount++;
+        gameBoard.markerChoiceState = "X";
+
+        // checking results
+        if (correct.result(gameBoard.board, "O")) {
+          warningElem.textContent = "O wins";
+          console.log("O wins")
+          gameBoard.tableEnabled = false
+        } else if (gameBoard.turnsCount === 9) {
+          warningElem.textContent = "TIE";
+          console.log("TIE")
+          gameBoard.tableEnabled = false
+        }
+
+      } else if (container.children.textContent !== "") {
+        if (gameBoard.turnsCount == 9) {
+          //break; idk what's going on here
+        }
+      }
+    }
+  }
+
+  return {
+    run
+  }
+})();
+
 /*
 ideas:
--change startBtnToggle on start menu & cpu start menu
- to direct to gameBoard.startBtnToggle
--when i press cpu, why does 'Restart' have
- to be pressed twice to restart??
-  open window wide
-    open 2 scripts.js windows to see wassup
+-make tic tac toe look good
+  
+-and finish off minimax tabs
+-refactor code
+-sumbit project
 
 1. Done
 2. Done
@@ -301,10 +391,7 @@ ideas:
 4. Done
 5. Done
 6. Done
-7. create AI to play agaisnt CPU
-    a. make computer do random legal moves
-    b. make computer unbeatable
-        use the minimax algorithm
+7. Done
 
 later:
 -make it look real clean with css

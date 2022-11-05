@@ -124,11 +124,14 @@ let correct = (() => {
         startBtn.textContent = "Restart"
         gameBoard.startBtnToggle = false;
       } else if (!gameBoard.startBtnToggle) {
-        gameBoard.tableEnabled = false;
         gameBoard.board = ["","","","","","","","",""];
         gameBoard.markerChoiceState = "X";
         gameBoard.turnsCount = 0;
+        gameBoard.tableEnabled = false;
         gameBoard.mode = "";
+        gameBoard.startBtnToggle = true;
+        gameBoard.scores = [3, 2, 3, 2, 4, 2, 3, 2, 3];
+        gameBoard.indexOfMissing = 0;
 
         warningElem.textContent = "Enter Player names or play CPU"
   
@@ -191,11 +194,14 @@ let correct = (() => {
         startBtn.textContent = "Restart"
         gameBoard.startBtnToggle = false;
       } else if (!gameBoard.startBtnToggle) {
-        gameBoard.tableEnabled = false;
         gameBoard.board = ["","","","","","","","",""];
         gameBoard.markerChoiceState = "X";
         gameBoard.turnsCount = 0;
+        gameBoard.tableEnabled = false;
         gameBoard.mode = "";
+        gameBoard.startBtnToggle = true;
+        gameBoard.scores = [3, 2, 3, 2, 4, 2, 3, 2, 3];
+        gameBoard.indexOfMissing = 0;
 
         warningElem.textContent = "Enter player names or play CPU"
   
@@ -299,7 +305,7 @@ let cpuMatch = (() => {
           }
 
           // CPU O's logic
-          setTimeout(() => {cpuTurn.run()}, 350)
+          setTimeout(() => {cpuTurn.run()}, 500)
         });
       }
     }

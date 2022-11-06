@@ -1,4 +1,5 @@
 let gameBoard = (() => {
+  // All the defaults
   let board = ["","","","","","","","",""];
 
   let markerChoiceState = "X";
@@ -19,10 +20,6 @@ let gameBoard = (() => {
     indexOfMissing
   }
 })();
-
-let Player = () => {
-  return {}
-}
 
 // Winning/Losing logic
 let correct = (() => {
@@ -90,6 +87,7 @@ let correct = (() => {
   let warningElem = document.querySelector(".warning")
   let cpuBtn = document.querySelector(".cpu-btn")
 
+  // Events after start button clicked
   startBtn.addEventListener('click', (e) => {
     if (player1.value === "" || player2.value === "") {
       warningElem.textContent = "Please enter player names/name"
@@ -155,6 +153,7 @@ let correct = (() => {
   let container = document.querySelector(".container");
   let warningElem = document.querySelector(".warning")
 
+  // Events after 'Play CPU' button clicked
   cpuBtn.addEventListener('click', (e) => {
     if (player1.value === "") {
       warningElem.textContent = "Please enter player 1 name"
@@ -170,7 +169,6 @@ let correct = (() => {
         player1.style.display = "none";
         player2.style.display = "none";
         cpuBtn.style.display = "none";
-
   
         player1Display.textContent = player1.value
 
@@ -248,13 +246,11 @@ let closeStates = (() => {
     return hasTwoSameMarkers
   }
 
-
   return {
     findState,
     closeLetter
   }
 });
-closeStates().findState()
 
 // CPU Match logic
 let cpuMatch = (() => {
@@ -292,6 +288,7 @@ let cpuMatch = (() => {
 
           // CPU O's logic
           gameBoard.tableEnabled = false
+          // CPU delay for a natural look
           setTimeout(() => {
             gameBoard.tableEnabled = true
             cpuTurn.run()
@@ -325,7 +322,7 @@ let cpuTurn = (() => {
       let high = highest(gameBoard.scores)
       let index = gameBoard.scores.indexOf(high);
 
-      if (container.children[index].textContent == "" && gameBoard.markerChoiceState == "O") {
+      if (!!container.children[index] && container.children[index].textContent == "" && gameBoard.markerChoiceState == "O") {
 
         if (gameBoard.turnsCount == 3 &&
           ((gameBoard.board[0] == 'X' && gameBoard.board[8]) ||
@@ -344,6 +341,8 @@ let cpuTurn = (() => {
 
         if (closeStates().findState()) {
           gameBoard.scores[gameBoard.indexOfMissing] += 10
+
+          console.log(closeStates().closeLetter)
         }
 
         gameBoard.turnsCount++;
@@ -352,17 +351,10 @@ let cpuTurn = (() => {
         // checking results
         if (correct.result(gameBoard.board, "O")) {
           warningElem.textContent = "O wins";
-          console.log("O wins")
           gameBoard.tableEnabled = false
         } else if (gameBoard.turnsCount === 9) {
           warningElem.textContent = "TIE";
-          console.log("TIE")
           gameBoard.tableEnabled = false
-        }
-
-      } else if (container.children.textContent !== "") {
-        if (gameBoard.turnsCount == 9) {
-          //break; idk what's going on here
         }
       }
     }
@@ -375,19 +367,9 @@ let cpuTurn = (() => {
 
 /*
 ideas:
--make tic tac toe look good
-  
 -and finish off minimax tabs
 -refactor code
 -sumbit project
-
-1. Done
-2. Done
-3. Done
-4. Done
-5. Done
-6. Done
-7. Done
 
 later:
 -make it look real clean with css

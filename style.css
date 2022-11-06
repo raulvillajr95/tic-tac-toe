@@ -1,8 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Karla:wght@300;400;600;700;800&family=Libre+Baskerville:wght@700&display=swap');
 
-:root {
-}
-
 /* Desktop Body */
 .body {
   display: grid;
@@ -90,6 +87,7 @@
   align-items: center;
   color: #00ffa5;
 }
+/* Main Grid */
 .container {
   height: 25rem;
   width: 25rem;
@@ -136,6 +134,7 @@
     margin-left: 0rem;
     justify-self: center;
   }
+  /* Grid Size & Placement Tablet */
   .container {
     grid-column: 1/2;
     grid-row: 2/3;
@@ -169,6 +168,7 @@
     height: 4rem;
     font-size: 1rem;
   }
+  /* Grid Size Mobile */
   .container {
     height: 18rem;
     width: 18rem;
@@ -203,8 +203,10 @@
     height: 2.5rem;
     font-size: 0.8rem;
   }
+  /* Grid Sizing Small Mobile */
   .container {
     height: 12rem;
     width: 12rem;
+    font-size: 3rem;
   }
 }

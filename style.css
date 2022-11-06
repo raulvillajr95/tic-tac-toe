@@ -9,7 +9,6 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 75vh 25vh;
   align-items: center;
-
   background-color: #181E2E;
 }
 .title {
@@ -113,38 +112,99 @@
   background-color: #303843;
   color: #00ffa5;
 }
-.buttons {
-  height: fit-content;
-  width: 5rem;
-  margin: 0 auto 0 auto;
-  display: flex;
-  justify-content: space-between;
-  grid-column: 2/3;
-  grid-row: 2/3;
-  align-self: center;
-  justify-self: center;
-}
-
-/* Might delete buttons permanently */
-.buttons {
-  display: none;
-}
 
 /* Tablet */
 @media only screen and (max-width: 70em) {
   /* Tablet Body */
+  .body {
+    grid-template-columns: 1fr;
+    grid-template-rows: 35vh 40vh 25vh;
+  }
+  .title {
+    grid-column: 1/2;
+    grid-row: 3/4;
+  }
+  .start-menu .form {
+    justify-self: center;
+    padding-top: 3rem;
+    padding-left: 0rem;
+  }
+  .start-menu .start-btn, .start-menu .cpu-btn {
+    justify-self: center;
+  }
+  .start-menu .warning {
+    margin-left: 0rem;
+    justify-self: center;
+  }
+  .container {
+    grid-column: 1/2;
+    grid-row: 2/3;
+    height: 25rem;
+    width: 25rem;
+  }
 }
 
 /* Mobile */
 @media only screen and (max-width: 38em) {
   /* Mobile Body */
+  .title {
+    height: 5rem;
+    width: 15rem;
+    font-size: 2rem;
+  }
+  .start-menu {
+    height: 15rem;
+  }
+  .start-menu .form {
+    padding-top: 0rem;
+  }
+  .start-menu .start-btn, .start-menu .cpu-btn {
+    height: 2.5rem;
+    width: 7rem;
+    font-size: 1rem;
+    margin-left: 0rem;
+  }
+  .start-menu .warning {
+    width: 20rem;
+    height: 4rem;
+    font-size: 1rem;
+  }
+  .container {
+    height: 18rem;
+    width: 18rem;
+  }
 }
 
 /* Super small phones */
 @media only screen and (max-width: 22em) {
   /* Small Body */
-}
-
-@media (prefers-color-scheme: dark) {
-  /* Desktop Body */
+  .body {
+    grid-template-rows: 42vh 42vh 16vh;
+  }
+  .title {
+    height: 2.5rem;
+    font-size: 1.5rem;
+  }
+  .start-menu {
+    height: 12rem;
+    grid-template-rows: 4fr 2fr 2fr;
+  }
+  .start-menu .form {
+    font-size: 1rem;
+    padding-top: 1rem;
+  }
+  .start-menu .start-btn, .start-menu .cpu-btn {
+    height: 2rem;
+    width: 6rem;
+    font-size: 0.9rem;
+  }
+  .start-menu .warning {
+    width: 15rem;
+    height: 2.5rem;
+    font-size: 0.8rem;
+  }
+  .container {
+    height: 12rem;
+    width: 12rem;
+  }
 }

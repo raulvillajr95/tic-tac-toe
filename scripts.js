@@ -79,20 +79,6 @@ let correct = (() => {
   }
 })();
 
-// Change X and O state with buttons
-(function() {
-  let xBtn = document.querySelector(".x-btn")
-  let oBtn = document.querySelector(".o-btn")
-
-  xBtn.addEventListener('click', () => {
-    gameBoard.markerChoiceState = "X";
-  })
-
-  oBtn.addEventListener('click', () => {
-    gameBoard.markerChoiceState = "O";
-  })
-})();
-
 // Start menu
 (function() {
   let player1 = document.getElementById("player1")
@@ -305,7 +291,11 @@ let cpuMatch = (() => {
           }
 
           // CPU O's logic
-          setTimeout(() => {cpuTurn.run()}, 500)
+          gameBoard.tableEnabled = false
+          setTimeout(() => {
+            gameBoard.tableEnabled = true
+            cpuTurn.run()
+          }, 500)
         });
       }
     }

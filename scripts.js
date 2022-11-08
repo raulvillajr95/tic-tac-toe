@@ -55,6 +55,7 @@ let correct = (() => {
 
         if (correct.result(gameBoard.board, gameBoard.markerChoiceState) && container.children[i].textContent != "") {
           gameBoard.tableEnabled = false
+          console.log("first")
 
           if (gameBoard.markerChoiceState === "X") {
             warningElem.textContent = `${player1.value} wins!`
@@ -134,7 +135,8 @@ let correct = (() => {
         player2.value = ""
         cpuBtn.style.display = "";
   
-        startBtn.textContent = "Start"
+        startBtn.textContent = "Pass & Play"
+        console.log("startBtn")
         gameBoard.startBtnToggle = true;
       }
     }
@@ -155,58 +157,55 @@ let correct = (() => {
 
   // Events after 'Play CPU' button clicked
   cpuBtn.addEventListener('click', (e) => {
-    if (player1.value === "") {
-      warningElem.textContent = "Please enter player 1 name"
-    } else {
-      if (gameBoard.startBtnToggle) {
-        gameBoard.tableEnabled = true;
-        gameBoard.mode = "cpu"
+    if (gameBoard.startBtnToggle) {
+      gameBoard.tableEnabled = true;
+      gameBoard.mode = "cpu"
 
-        cpuMatch.run()
+      cpuMatch.run()
 
-        warningElem.textContent = ""
-  
-        player1.style.display = "none";
-        player2.style.display = "none";
-        cpuBtn.style.display = "none";
-  
-        player1Display.textContent = player1.value
+      warningElem.textContent = "";
 
-        player2.value = "CPU"
-        player2Display.textContent = player2.value
-  
-        startBtn.textContent = "Restart"
-        gameBoard.startBtnToggle = false;
-      } else if (!gameBoard.startBtnToggle) {
-        gameBoard.board = ["","","","","","","","",""];
-        gameBoard.markerChoiceState = "X";
-        gameBoard.turnsCount = 0;
-        gameBoard.tableEnabled = false;
-        gameBoard.mode = "";
-        gameBoard.startBtnToggle = true;
-        gameBoard.scores = [3, 2, 3, 2, 4, 2, 3, 2, 3];
-        gameBoard.indexOfMissing = 0;
+      player1.style.display = "none";
+      player2.style.display = "none";
+      cpuBtn.style.display = "none";
 
-        warningElem.textContent = "Enter player names or play CPU"
-  
-        // Reset Xs and Os on table
-        for (let i = 0; i < container.children.length; i++) {
-          container.children[i].textContent = ""; 
-        }
-  
-        player1.style.display = "";
-        player2.style.display = "";
-        cpuBtn.style.display = "";
-  
-        player1Display.textContent = ""
-        player2Display.textContent = ""
-  
-        player1.value = ""
-        player2.value = ""
-  
-        startBtn.textContent = "Start"
-        gameBoard.startBtnToggle = true;
+      player1.value = "Player 1"
+      player1Display.textContent = player1.value
+
+      player2.value = "CPU"
+      player2Display.textContent = player2.value
+
+      startBtn.textContent = "Restart"
+      gameBoard.startBtnToggle = false;
+    } else if (!gameBoard.startBtnToggle) {
+      gameBoard.board = ["","","","","","","","",""];
+      gameBoard.markerChoiceState = "X";
+      gameBoard.turnsCount = 0;
+      gameBoard.tableEnabled = false;
+      gameBoard.mode = "";
+      gameBoard.startBtnToggle = true;
+      gameBoard.scores = [3, 2, 3, 2, 4, 2, 3, 2, 3];
+      gameBoard.indexOfMissing = 0;
+
+      warningElem.textContent = "Enter player names or play CPU"
+
+      // Reset Xs and Os on table
+      for (let i = 0; i < container.children.length; i++) {
+        container.children[i].textContent = ""; 
       }
+
+      player1.style.display = "";
+      player2.style.display = "";
+      cpuBtn.style.display = "";
+
+      player1Display.textContent = ""
+      player2Display.textContent = ""
+
+      player1.value = ""
+      player2.value = ""
+
+      startBtn.textContent = "Pass & Play"
+      gameBoard.startBtnToggle = true;
     }
   })
 })();
@@ -231,11 +230,6 @@ let closeStates = (() => {
         for (let j = 0; j < 3; j++) {
           if (rowsColsDia[i][Object.keys(rowsColsDia[i])[j]] == "") {
             gameBoard.indexOfMissing = Number(Object.keys(rowsColsDia[i])[j].slice(-1));
-            if (Object.values(rowsColsDia[i])[0] == "X" || Object.values(rowsColsDia[i])[0] == "X") {
-              console.log("X")
-            } else if (Object.values(rowsColsDia[i])[0] == "O" || Object.values(rowsColsDia[i])[0] == "O") {
-              console.log("O")
-            }
             break;
           }
         }
@@ -261,6 +255,8 @@ let cpuMatch = (() => {
 
         container.children[i].addEventListener('click', (e) => {
     
+          console.log("fjdlk")
+          console.log(gameBoard.tableEnabled)
           // My X's logic
           if (container.children[i].textContent === "" && gameBoard.tableEnabled && gameBoard.mode === "cpu") {
             container.children[i].textContent = gameBoard.markerChoiceState
@@ -284,11 +280,8 @@ let cpuMatch = (() => {
             }
           }
 
-          // CPU O's logic
-          gameBoard.tableEnabled = false
-          // CPU delay for a natural look
+          // CPU O's logic, CPU delay for a natural look
           setTimeout(() => {
-            gameBoard.tableEnabled = true
             cpuTurn.run()
           }, 500)
         });
@@ -355,21 +348,11 @@ let cpuTurn = (() => {
 
 /*
 ideas:
--refactor code
-  when playing cpu, no name required
-  board not looking good for the ipad mini
-  move "Start" next to left of players
-    change "Start" to "Pass & Play"
-  move "Play CPU" to center
-    change "Play CPU" to "Play Computer"
 -when playing CPU randomly choose who goes first
   after pressing start, 
     randomly 50/50 chance
     display "CPU first"
     then let cpu go automatically
--refactor code
-  there's bugs,
-    after choosing winner, and you tap other spots, it'll choose another winner
 -sumbit project
 
 */

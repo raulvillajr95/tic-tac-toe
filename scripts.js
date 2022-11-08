@@ -221,7 +221,6 @@ let closeStates = (() => {
   {index0: gameBoard.board[0],index4: gameBoard.board[4],index8: gameBoard.board[8]},
   {index2: gameBoard.board[2],index4: gameBoard.board[4],index6: gameBoard.board[6]}]
 
-  let closeLetter = "";
   let findState = () => {
     let hasTwoSameMarkers = false;
 
@@ -233,9 +232,9 @@ let closeStates = (() => {
           if (rowsColsDia[i][Object.keys(rowsColsDia[i])[j]] == "") {
             gameBoard.indexOfMissing = Number(Object.keys(rowsColsDia[i])[j].slice(-1));
             if (Object.values(rowsColsDia[i])[0] == "X" || Object.values(rowsColsDia[i])[0] == "X") {
-              closeLetter = "X"
+              console.log("X")
             } else if (Object.values(rowsColsDia[i])[0] == "O" || Object.values(rowsColsDia[i])[0] == "O") {
-              closeLetter = "O"
+              console.log("O")
             }
             break;
           }
@@ -248,7 +247,6 @@ let closeStates = (() => {
 
   return {
     findState,
-    closeLetter
   }
 });
 
@@ -304,22 +302,13 @@ let cpuMatch = (() => {
 
 let cpuTurn = (() => {
   let run = () => {
-    function highest(arr) {
-      let count = 0;
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i] > count) {
-          count = arr[i]
-        }
-      }
-      return count;
-    }
 
     let container = document.querySelector(".container");
     let warningElem = document.querySelector(".warning");
 
     if (gameBoard.tableEnabled && gameBoard.mode === "cpu") {
   
-      let high = highest(gameBoard.scores)
+      let high = Math.max(...gameBoard.scores)
       let index = gameBoard.scores.indexOf(high);
 
       if (!!container.children[index] && container.children[index].textContent == "" && gameBoard.markerChoiceState == "O") {
@@ -340,9 +329,8 @@ let cpuTurn = (() => {
         }
 
         if (closeStates().findState()) {
-          gameBoard.scores[gameBoard.indexOfMissing] += 10
-
-          console.log(closeStates().closeLetter)
+          // Priotize a win over a save
+          gameBoard.scores[gameBoard.indexOfMissing] += 15
         }
 
         gameBoard.turnsCount++;
@@ -367,17 +355,21 @@ let cpuTurn = (() => {
 
 /*
 ideas:
--and finish off minimax tabs
 -refactor code
--sumbit project
-
-later:
--make it look real clean with css
+  when playing cpu, no name required
+  board not looking good for the ipad mini
+  move "Start" next to left of players
+    change "Start" to "Pass & Play"
+  move "Play CPU" to center
+    change "Play CPU" to "Play Computer"
 -when playing CPU randomly choose who goes first
   after pressing start, 
     randomly 50/50 chance
     display "CPU first"
     then let cpu go automatically
 -refactor code
+  there's bugs,
+    after choosing winner, and you tap other spots, it'll choose another winner
+-sumbit project
 
 */

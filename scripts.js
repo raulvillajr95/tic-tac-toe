@@ -157,13 +157,14 @@ let correct = (() => {
 
   // Events after 'Play CPU' button clicked
   cpuBtn.addEventListener('click', (e) => {
+
     if (gameBoard.startBtnToggle) {
       gameBoard.tableEnabled = true;
       gameBoard.mode = "cpu"
 
       cpuMatch.run()
 
-      warningElem.textContent = "";
+      // warningElem.textContent = "";
 
       player1.style.display = "none";
       player2.style.display = "none";
@@ -250,13 +251,16 @@ let cpuMatch = (() => {
     let container = document.querySelector(".container");
     let warningElem = document.querySelector(".warning")
 
-    if (gameBoard.mode = "cpu") {
+    function random2() {
+      return Math.floor(Math.random() * 2)
+    }
+    let choice = random2()
+
+    let startCPUMatch = (() => {
       for (let i = 0; i < container.children.length; i++) {
 
         container.children[i].addEventListener('click', (e) => {
     
-          console.log("fjdlk")
-          console.log(gameBoard.tableEnabled)
           // My X's logic
           if (container.children[i].textContent === "" && gameBoard.tableEnabled && gameBoard.mode === "cpu") {
             container.children[i].textContent = gameBoard.markerChoiceState
@@ -286,6 +290,21 @@ let cpuMatch = (() => {
           }, 500)
         });
       }
+    })
+
+    if (gameBoard.mode == "cpu" && choice == 1) {
+      warningElem.textContent = "Player 1 first";
+
+      // The actual running of the match
+      startCPUMatch()
+    } else if (gameBoard.mode == "cpu" && choice == 0) {
+      // CPU O's logic, CPU delay for a natural look
+      warningElem.textContent = "CPU first";
+      gameBoard.markerChoiceState = "O"
+      cpuTurn.run()
+
+      // The actual running of the match
+      startCPUMatch()
     }
   }
   return {
@@ -345,14 +364,3 @@ let cpuTurn = (() => {
     run
   }
 })();
-
-/*
-ideas:
--when playing CPU randomly choose who goes first
-  after pressing start, 
-    randomly 50/50 chance
-    display "CPU first"
-    then let cpu go automatically
--sumbit project
-
-*/
